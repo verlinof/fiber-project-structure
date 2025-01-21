@@ -22,12 +22,4 @@ func ConnectDatabase() {
 	if err != nil {
 		panic(err)
 	}
-
-	dbSql, err := DB.DB()
-	if err != nil {
-		panic(err)
-	}
-
-	//Closing database connection on shutdown
-	defer dbSql.Close()
 }
