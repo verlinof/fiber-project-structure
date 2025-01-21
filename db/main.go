@@ -1,7 +1,7 @@
 package db
 
 import (
-	"github.com/verlinof/golang-project-structure/configs/db_config"
+	"github.com/verlinof/fiber-project-structure/configs/db_config"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
