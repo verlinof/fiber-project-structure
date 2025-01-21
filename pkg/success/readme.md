@@ -1,3 +1,3 @@
 ## Isi Folder
 
-- Success Responses
+- Standard Success Responses

@@ -1,3 +1,3 @@
 ## Isi Folder
 
-- Error Responses
+- Standard Error Responses

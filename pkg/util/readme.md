@@ -1,4 +1,4 @@
 ## Isi Folder
 
-- Manager
+- Third Party API Integration
 - Pkg Helper
