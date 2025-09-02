@@ -67,3 +67,49 @@ Deskripsi tentang struktur folder untuk proyek ini.
 
 7. **Hot Reload**
    - Gunakan `.air.toml` untuk konfigurasi hot-reloading selama pengembangan.
+
+# Run Application
+
+1. **Install the Dependencies**
+
+```bash
+go mod tidy && go mod download
+```
+
+2. Copy .env.example
+
+```bash
+cp .env.example .env
+```
+
+3. Run Migration
+
+- Install Goose CLI
+
+```bash
+go install github.com/pressly/goose/v3/cmd/goose@latest
+```
+
+- Run Migration
+
+```bash
+goose up
+```
+
+4. Run Seeders
+
+```bash
+go run cmd/seeders/main.go
+```
+
+5. Run Application
+
+```bash
+go run cmd/api/main.go
+```
+
+or
+
+```bash
+air
+```

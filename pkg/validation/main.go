@@ -47,8 +47,8 @@ func (v XValidator) InitCustomValidation() {
 	// Custom struct validation tag format (EXAMPLE)
 	v.validator.RegisterValidation("example", func(fl validator.FieldLevel) bool {
 		// Can be filled with conditional statement
+		// // User.Age needs to fit our needs, 12-18 years old.
+		// return fl.Field().Int() >= 12 && fl.Field().Int() <= 18
 		return true
 	})
-	// // User.Age needs to fit our needs, 12-18 years old.
-	// return fl.Field().Int() >= 12 && fl.Field().Int() <= 18
 }

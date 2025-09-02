@@ -41,7 +41,7 @@ func SuccessDeleteData(id any) *ClientSuccess {
 	}
 }
 
-func SuccessCreateData(data interface{}) *ClientSuccess {
+func SuccessCreateData(data any) *ClientSuccess {
 	return &ClientSuccess{
 		Message: "Success",
 		Data:    data,
