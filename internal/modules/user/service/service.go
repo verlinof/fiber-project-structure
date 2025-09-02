@@ -28,24 +28,6 @@ func (s UserService) GetAllUsers(ctx context.Context, page int, perPage int) (*p
 	return response, nil
 }
 
-func (s UserService) GetUserbyPuskesmas(ctx context.Context, id int, page int, perPage int) (*pkg_success.PaginationData, error) {
-	var users []user_model.UserResponse
-	var totalRows int64
-
-	// Pagination System
-	offset := (page - 1) * perPage
-
-	err := db.DB.WithContext(ctx).Table("users").Where("id_role != 1 && id_puskesmas = ?", id).Count(&totalRows).Limit(perPage).Offset(offset).Find(&users).Error
-	if err != nil {
-		return &pkg_success.PaginationData{}, err
-	}
-
-	totalPage := math.Ceil(float64(totalRows) / float64(perPage))
-	response := pkg_success.SuccessPaginationData(users, page, int(totalPage), perPage, int(totalRows))
-
-	return response, nil
-}
-
 func (s UserService) GetUserbyID(ctx context.Context, id int) (user_model.UserResponse, error) {
 	var user user_model.UserResponse
 

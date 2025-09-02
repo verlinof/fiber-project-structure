@@ -13,16 +13,11 @@ import (
 func (h UserHandler) GetUsers(ctx *fiber.Ctx) error {
 	page := ctx.QueryInt("page", 1)
 	perPage := ctx.QueryInt("per_page", 10)
-	idPuskesmas := ctx.QueryInt("id_puskesmas", 0)
 
 	var users *pkg_success.PaginationData
 	var err error
 
-	if idPuskesmas != 0 {
-		users, err = h.userService.GetUserbyPuskesmas(ctx.Context(), idPuskesmas, page, perPage)
-	} else {
-		users, err = h.userService.GetAllUsers(ctx.Context(), page, perPage)
-	}
+	users, err = h.userService.GetAllUsers(ctx.Context(), page, perPage)
 
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(pkg_error.NewInternalServerError(err))
