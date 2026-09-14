@@ -10,7 +10,7 @@ type AuthHandler struct {
 	xValidator  pkg_validation.XValidator
 }
 
-func NewAuthHandler(authService auth_service.AuthService, xValidator pkg_validation.XValidator) AuthHandler {
+func NewHandler(authService auth_service.AuthService, xValidator pkg_validation.XValidator) AuthHandler {
 	return AuthHandler{
 		authService: authService,
 		xValidator:  xValidator,

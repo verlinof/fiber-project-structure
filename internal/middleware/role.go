@@ -3,14 +3,14 @@ package middleware
 import (
 	"fmt"
 
+	"github.com/verlinof/fiber-project-structure/db"
+	auth_model "github.com/verlinof/fiber-project-structure/internal/modules/auth/model"
+	pkg_error "github.com/verlinof/fiber-project-structure/pkg/error"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v5"
-	"github.com/verlinof/fiber-project-structure/db"
-	user_model "github.com/verlinof/fiber-project-structure/internal/modules/user/model"
-	pkg_error "github.com/verlinof/fiber-project-structure/pkg/error"
 )
 
-// INI SEMENTARA, KALAU MODULNYA DAH ADA BAKAL DIILANGIN
 type permission struct {
 	ID   int    `json:"id"`
 	Name string `json:"name"`
@@ -26,7 +26,7 @@ func RoleMiddleware(tag string) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		var permission permission
 		var roleHasPermission roleHasPermissions
-		var userModel user_model.User
+		var userModel auth_model.User
 
 		user := c.Locals("token").(*jwt.Token)
 		claims := user.Claims.(jwt.MapClaims)
@@ -38,19 +38,19 @@ func RoleMiddleware(tag string) fiber.Handler {
 		fmt.Println(IDUser, IDRole)
 
 		// Find Permission by Tag
-		err := db.DB.Table("permissions").Where("name = ?", tag).First(&permission).Error
+		err := db.GetDB().Table("permissions").Where("name = ?", tag).First(&permission).Error
 		if err != nil {
 			return c.Status(fiber.StatusForbidden).JSON(pkg_error.NewForbidden(fmt.Errorf("access denied")))
 		}
 
 		// Check Role Has Permission
-		err = db.DB.Table("role_has_permissions").Where("role_id = ? AND permission_id = ?", IDRole, permission.ID).First(&roleHasPermission).Error
+		err = db.GetDB().Table("role_has_permissions").Where("role_id = ? AND permission_id = ?", IDRole, permission.ID).First(&roleHasPermission).Error
 		if err != nil {
 			return c.Status(fiber.StatusForbidden).JSON(pkg_error.NewForbidden(fmt.Errorf("access denied")))
 		}
 
 		// Set Current User
-		err = db.DB.Table("users").Where("id = ?", IDUser).First(&userModel).Error
+		err = db.GetDB().Table("users").Where("id = ?", IDUser).First(&userModel).Error
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).JSON(pkg_error.NewInternalServerError(err))
 		}

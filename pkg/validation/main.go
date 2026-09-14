@@ -9,46 +9,32 @@ import (
 )
 
 func (v XValidator) Validate(data interface{}) error {
-	var err error
-	validationErrors := []ErrorResponse{}
+	validationErrors := v.validator.Struct(data)
+	if validationErrors != nil {
 
-	errs := v.validator.Struct(data)
-	if errs != nil {
-		for _, err := range errs.(validator.ValidationErrors) {
-			// In this case data object is actually holding the User struct
-			var elem ErrorResponse
+		// Cast the error to validator.ValidationErrors
+		errs := validationErrors.(validator.ValidationErrors)
 
-			elem.FailedField = err.Field() // Export struct field name
-			elem.Tag = err.Tag()           // Export struct tag
+		// Create a slice to hold the custom error messages
+		var errorMessages []string
 
-			validationErrors = append(validationErrors, elem)
+		for _, err := range errs {
+			// Use a switch statement to create a custom message for each validation tag
+			var message string
+			switch err.Tag() {
+			case "email":
+				message = fmt.Sprintf("%s must be a valid email address.", err.Field())
+			default:
+				// A default message for any other validation errors
+				message = fmt.Sprintf("'%s' need '%s' tag.", err.Field(), err.Tag())
+			}
+			errorMessages = append(errorMessages, message)
 		}
 
-		//Convert []ErrorResponse -> golang standard error
-		errMsgs := make([]string, 0)
-
-		for _, err := range validationErrors {
-			errMsgs = append(errMsgs, fmt.Sprintf(
-				"%s Need to Implement '%v'",
-				err.FailedField,
-				err.Tag,
-			))
-		}
-		// Separator
-		errString := strings.Join(errMsgs, ";")
-		err = errors.New(errString)
+		// Join all error messages into a single string
+		return errors.New(strings.Join(errorMessages, "; "))
 	}
 
-	return err
-}
-
-// Adding custom validation for Struct
-func (v XValidator) InitCustomValidation() {
-	// Custom struct validation tag format (EXAMPLE)
-	v.validator.RegisterValidation("example", func(fl validator.FieldLevel) bool {
-		// Can be filled with conditional statement
-		// // User.Age needs to fit our needs, 12-18 years old.
-		// return fl.Field().Int() >= 12 && fl.Field().Int() <= 18
-		return true
-	})
+	// Return nil if there are no validation errors
+	return nil
 }

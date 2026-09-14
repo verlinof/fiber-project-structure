@@ -1,17 +1,14 @@
-package auth_http_route
+package auth_route
 
 import (
-	"github.com/gofiber/fiber/v2"
+	"github.com/verlinof/fiber-project-structure/db"
 	"github.com/verlinof/fiber-project-structure/internal/middleware"
 	auth_http "github.com/verlinof/fiber-project-structure/internal/modules/auth/http"
+	"github.com/gofiber/fiber/v2"
 )
 
-func AuthRoute(router fiber.Router, authHandler auth_http.AuthHandler) {
-	authRoute := router.Group("/")
-
-	authRoute.Post("/login", authHandler.Login)
-
-	//Contoh penggunaan Middleware by Permission Name
-	authRoute.Use(middleware.AuthMiddleware())
-	authRoute.Get("/tes", middleware.RoleMiddleware("users.create"), authHandler.Tes) // Tag adalah nama permission
+func InitRoute(router fiber.Router, authHandler auth_http.AuthHandler) {
+	router.Post("/register", authHandler.Register)
+	router.Post("/login", authHandler.Login)
+	router.Get("/profile", middleware.AuthMiddleware(), middleware.CheckUserExists(db.GetDB()), authHandler.GetProfile)
 }

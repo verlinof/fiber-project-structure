@@ -1,3 +1,5 @@
 .env
 
 /tmp/*
+/minio_data/*
+/.vscode/*

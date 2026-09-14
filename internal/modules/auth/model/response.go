@@ -1,8 +1,16 @@
 package auth_model
 
-import user_model "github.com/verlinof/fiber-project-structure/internal/modules/user/model"
+import "time"
+
+type UserResponse struct {
+	ID        int       `json:"id"`
+	Name      string    `json:"name"`
+	Email     string    `json:"email"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
+}
 
 type LoginResponse struct {
-	Jwt  string                   `json:"jwt"`
-	User *user_model.UserResponse `json:"user,omitempty"`
+	Token string        `json:"token"`
+	User  *UserResponse `json:"user"`
 }
